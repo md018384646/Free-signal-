@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#050510">
+<title>Signal Face</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;touch-action:manipulation}
+
+/* প্রিমিয়াম কালারফুল ব্যাকগ্রাউন্ড */
+body{display:grid;place-items:center;background:#03040a;font-family:system-ui,sans-serif;color:white;position:relative;overflow:hidden}
+body::before{
+  content:"";position:absolute;inset:-60%;
+  background:radial-gradient(circle at 20% 30%, rgba(255,0,128,0.35), transparent 45%),
+             radial-gradient(circle at 80% 20%, rgba(0,229,255,0.35), transparent 45%),
+             radial-gradient(circle at 50% 80%, rgba(123,44,191,0.4), transparent 50%),
+             radial-gradient(circle at 90% 90%, rgba(255,183,3,0.3), transparent 40%);
+  animation:bgMove 10s ease-in-out infinite alternate;
+  z-index:0;
+  filter:blur(40px);
+}
+@keyframes bgMove{
+  0%{transform:scale(1) translate(0, 0) rotate(0deg);}
+  50%{transform:scale(1.1) translate(30px, -20px) rotate(10deg);}
+  100%{transform:scale(1.05) translate(-20px, 20px) rotate(-10deg);}
+}
+
+body>*{position:relative;z-index:1}
+.stars,.stars:before,.stars:after{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(#fff 1.2px,transparent 1.8px);background-size:55px 55px;opacity:.4;animation:twinkle 3s ease-in-out infinite alternate}
+.stars:before,.stars:after{content:"";background-size:95px 95px;transform:translate(21px,32px);opacity:.45}
+.stars:after{background-size:135px 135px;transform:translate(-30px,-17px)}
+
+.stage{position:relative;width:min(92vw, 430px);aspect-ratio:1;display:grid;place-items:center;isolation:isolate}
+.glow{position:absolute;inset:8%;border-radius:50%;background:conic-gradient(#00f5ff,#7457ff,#ff36cf,#ffb547,#7cff8c,#00f5ff);filter:blur(45px);opacity:.6;animation:breathe 2.5s ease-in-out infinite alternate}
+.ring{position:absolute;border-radius:50%;inset:2%;border:2px solid transparent;background:linear-gradient(#090d28,#090d28) padding-box,conic-gradient(from 0deg,#39f6ff,#8a57ff,#ff4bd8,#ffe16a,#39f6ff) border-box;box-shadow:0 0 28px #4deaffaa,inset 0 0 30px #a44cff66;animation:rotate 8s linear infinite}
+.ring.r2{inset:9%;border-width:1.5px;opacity:.85;animation:rotateBack 12s linear infinite}
+.ring.r3{inset:16%;border:1px dashed #8feeffaa;opacity:.7;animation:rotate 22s linear infinite}
+
+.core{position:relative;width:72%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;cursor:pointer;outline:none;
+ background:radial-gradient(circle at 34% 25%,#3d568a 0,#17224d 34%,#0b102d 72%);
+ border:1.5px solid #b4faffcc;box-shadow:inset 0 0 35px #48eaff44,0 0 35px #5e65ff88,0 0 80px #b13fff66;
+ -webkit-tap-highlight-color:transparent}
+.core:before{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid #6ffaffaa;box-shadow:0 0 25px #48f5ff;animation:pulse 1.6s ease-in-out infinite}
+.core:after{content:"";position:absolute;inset:10%;border-radius:50%;border:1px solid #ffffff55;box-shadow:inset 0 0 30px #ff4bd844}
+.face{position:relative;z-index:2;width:100%;height:100%;display:grid;place-items:center}
+
+/* আল্ট্রা এইচডি ক্লিয়ার এবং অ্যানিমেশন চলাকালীন কন্টিনিউয়াস বড়-ছোট হওয়ার স্টাইল */
+.value{
+  font-size:clamp(48px, 15vw, 78px);
+  font-weight:950;
+  letter-spacing:-1px;
+  color:#ff1e3c;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 3px #ff7085, 0 0 15px rgba(255,30,60,0.5);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* যখন রোলিং বা এনিমেশন চলবে তখন কন্টিনিউয়াস বড়-ছোট হবে */
+.value.rolling {
+  animation: continuousPulse 0.35s ease-in-out infinite alternate;
+}
+@keyframes continuousPulse {
+  0% { transform: scale(0.92); opacity: 0.75; }
+  100% { transform: scale(1.08); opacity: 1; }
+}
+
+/* ফাইনাল সিগন্যাল আসার পরের পপ এফেক্ট */
+.value.pop {
+  animation: numberPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes numberPop {
+  0% { transform: scale(0.7); opacity: 0.3; }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.scan{position:absolute;z-index:1;width:76%;height:2.5px;top:50%;left:12%;background:linear-gradient(90deg,transparent,#9fffff,white,#ff8bea,transparent);box-shadow:0 0 16px #57efff;animation:scan 2.2s ease-in-out infinite}
+.particle{position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 16px 5px #49efff;top:50%;left:50%;transform-origin:0 0;animation:orbit 4.5s linear infinite}
+.particle.p2{width:6px;height:6px;box-shadow:0 0 16px 5px #ff4bd8;animation-duration:6.5s;animation-direction:reverse}
+.particle.p3{width:5px;height:5px;box-shadow:0 0 14px 4px #ffe16a;animation-duration:8.5s}
+.flash{position:absolute;inset:0;border-radius:50%;background:#fff;opacity:0;pointer-events:none}
+.stage.burst .flash{animation:flash .35s ease-out}
+
+@keyframes rotate{to{transform:rotate(360deg)}}
+@keyframes rotateBack{to{transform:rotate(-360deg)}}
+@keyframes breathe{to{transform:scale(1.12);opacity:.8;filter:blur(50px)}}
+@keyframes pulse{50%{transform:scale(1.06);opacity:.5}}
+@keyframes scan{0%{transform:translateY(-48px);opacity:0}25%{opacity:1}75%{opacity:1}100%{transform:translateY(48px);opacity:0}}
+@keyframes orbit{to{transform:rotate(360deg) translateX(min(43vw, 190px)) rotate(-360deg)}}
+@keyframes twinkle{to{opacity:.12}}
+@keyframes flash{0%{opacity:.5}100%{opacity:0}}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<main class="stage" id="stage">
+ <div class="glow"></div><div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+ <i class="particle"></i><i class="particle p2"></i><i class="particle p3"></i>
+ <div class="core" id="core" role="button" aria-label="Generate signal" tabindex="0">
+  <div class="face"><div class="scan"></div><div class="value rolling" id="value">···</div></div>
+  <div class="flash"></div>
+ </div>
+</main>
+
+<script id="transferred-signal-logic">
+const CRASH_SEQUENCE = [1.25,1.60,2.40,1.07,1.38,9.10,1.08,1.45,3.05,1.12,19.80,1.04,6.60,1.23,2.70,1.11,3.90,1.14,1.85,1.06,102.50,1.58,4.25,1.03,1.40,8.75,1.15,1.55,2.15,1.07,13.40,1.24,1.90,1.02,1.47,6.25,1.08,1.35,3.55,1.10,1.19,1.52,2.60,1.05,1.31,35.20,1.06,1.68,5.45,1.01,1.12,1.45,8.10,1.04,1.16,4.50,1.07,1.30,2.25,1.08,1.21,1.55,3.90,1.06,1.36,16.50,1.09,1.62,1.98,1.03,9.20,1.18,2.85,1.02,1.43,5.80,1.11,1.20,3.25,1.05,1.14,1.49,6.90,1.08,1.32,22.80,1.02,1.10,2.35,1.42,1.17,1.54,4.25,1.04,1.25,7.30,1.09,1.33,2.80,1.07,1.52,10.15,1.05,1.15,2.12,1.24,12.40,1.07,4.50,1.36,1.13,1.59,3.15,1.01,1.42,5.25,1.04,1.17,2.45,1.10,1.23,1.55,2.20,1.08,1.35,8.80,1.06,1.40,3.10,1.14,17.15,1.02,6.45,1.21,2.65,1.09,3.75,1.12,1.90,1.05,550.20,1.54,4.10,1.04,1.39,9.40,1.16,1.58,2.30,1.08,11.25,1.22,1.85,1.03,1.44,6.15,1.07,1.31,3.40,1.11,1.18,1.49,2.55,1.06,1.33,28.10,1.05,1.65,5.60,1.01,1.13,1.42,7.25,1.08,1.15,4.30,1.09,1.28,2.15,1.04,1.20,1.52,3.85,1.07,1.34,14.80,1.10,1.60,1.95,1.02,8.50,1.19,2.70,1.03,1.45,5.90,1.12,1.21,3.35,1.06,1.15,1.47,6.80,1.09,1.30,19.30,1.04,1.11,2.20,1.40,1.18,1.55,4.40,1.05,1.24,7.10,1.07,1.32,2.65,1.08,1.46,12.90,1.03,1.14,2.05,1.22,312.40,1.09,4.25,1.35,1.12,1.58,3.05,1.02,1.41,5.15,1.04,1.17,2.45,1.10,25.50,1.38,6.30,1.05,1.21,15.20,1.01,1.62,4.90,1.08,1.16,1.50,3.75,1.04,1.34,8.40,1.06,1.25,2.90,1.13,4.60,1.09,1.48,11.80,1.02,1.14,2.15,1.07,42.10,1.30,1.11,1.55,2.40,1.03,1.19,5.75,1.08,1.42,3.10,1.05,7.15,1.01,1.28,9.30,1.12,1.40,2.85,1.04,18.40,1.22,1.09,3.45,1.70,1.02,6.20,1.15,4.10,1.06,2.52,1.18,1.11,1.59,2.10,1.07,1.40,10.15,1.28,1.63,5.05,1.09,1.17,3.45,1.85,1.04,7.60,1.49,14.70,1.15,2.30,1.08,1.23,1.55,4.15,1.02,1.34,8.35,1.16,1.58,2.65,1.10,11.20,1.27,2.90,1.03,1.45,5.40,1.08,1.19,3.50,1.12,205.40,1.60,2.25,1.05,1.38,9.80,1.21,1.52,4.75,1.06,1.14,3.10,1.95,1.01,6.20,1.42,25.10,1.13,2.40,1.07,1.18,1.50,3.65,1.04,1.29,7.45,1.15,1.65,2.80,1.09,1.12,4.30,1.48,1.08,5.10,1.35,18.20,1.10,2.15,1.03,1.22,1.54,2.45,1.06,1.32,8.90,1.07,1.46,3.05,1.14,120.50,1.01,6.40,1.19,2.60,1.08,4.25,1.12,1.82,1.05,1.58,14.10,1.04,1.15,2.35,1.21,55.40,1.09,3.90,1.40,1.18,1.47,7.20,1.03,1.30,5.80,1.06,1.44,2.50,1.11,1.52,11.30,1.02,1.16,2.10,1.25,35.20,1.08,4.90,1.38,1.12,1.41,8.15,1.04,1.22,3.40,1.14,1.55,2.95,1.09,20.80,1.33,6.70,1.05,1.26,4.10,1.01,1.62,2.20,1.10,1.48,9.40,1.03,1.31,2.75,1.19,15.60,1.07,3.15,1.42,1.08,1.24,5.22,1.06,1.39,7.80,1.13,1.50,2.05,1.02,12.45,1.17,3.20,1.88,1.09,4.56,1.11,1.28,2.33,1.04,6.45,1.02,1.35,8.20,1.10,1.65,2.15,1.08,10.50,1.40,1.15,4.30,1.90,1.01,5.12,1.20,3.80,1.05,1.45,1.12];
+
+const ANC = 1704067200;
+const CTD = 5.0, PCT = 3.0, GR = 0.06;
+function rDur(v){ return CTD + Math.log(v)/GR + PCT; }
+const RST_ARR = new Array(CRASH_SEQUENCE.length);
+let TCT = 0;
+for(let i=0;i<CRASH_SEQUENCE.length;i++){RST_ARR[i]=TCT;TCT+=rDur(CRASH_SEQUENCE[i]);}
+
+const value=document.getElementById('value'),stage=document.getElementById('stage'),core=document.getElementById('core');
+let lastIdx = -1;
+let activeTimer = null;
+
+function updateSignal(){
+  const s = Date.now()/1000;
+  const sc = ((s-ANC)%TCT+TCT)%TCT;
+  let lo=0,hi=RST_ARR.length-1,idx=0;
+  while(lo<=hi){const mid=(lo+hi)>>1;if(RST_ARR[mid]<=sc){idx=mid;lo=mid+1;}else hi=mid-1;}
+  
+  if(idx !== lastIdx){
+    lastIdx = idx;
+    if(activeTimer) clearInterval(activeTimer);
+    
+    stage.classList.remove('burst');
+    void stage.offsetWidth;
+    stage.classList.add('burst');
+    
+    value.classList.remove('pop');
+    value.classList.add('rolling');
+    
+    let n=0;
+    const targetVal = CRASH_SEQUENCE[idx];
+    activeTimer=setInterval(()=>{
+      value.textContent=(1+Math.random()*8.8).toFixed(2)+'×';
+      if(++n>=10){
+        clearInterval(activeTimer);
+        activeTimer = null;
+        value.textContent=targetVal.toFixed(2)+'×';
+        
+        value.classList.remove('rolling');
+        value.classList.add('pop');
+      }
+    },60);
+  }
+}
+
+setInterval(updateSignal, 500);
+window.addEventListener('load', updateSignal);
+
+core.addEventListener('click', updateSignal);
+core.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();updateSignal();}});
+</script>
+</body>
+</html>
